@@ -3,7 +3,7 @@
 Custom Date Picker built using Jetpack Compose UI
 
 ## Gif
-<img src="https://github.com/HenryUdorji/CustomDatePickerDialog/blob/master/result/result-gif.gif" width="50%" height="50%"/>
+<img src="https://github.com/HenryUdorji/CustomDatePickerDialog/blob/master/result/result-gif.gif" width="300" height="667"/>
 
 ## Tech Stack.
 - [Kotlin](https://developer.android.com/kotlin) - Kotlin is a programming language that can run on JVM. Google has announced Kotlin as one of its officially supported programming languages in Android Studio; and the Android community is migrating at a pace from Java to Kotlin.
