@@ -2,6 +2,7 @@ package com.hashconcepts.customdatepickerdialog
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
@@ -94,16 +96,28 @@ fun DatePickerUI(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            DateSelectionSection()
+            val chosenYear = remember { mutableStateOf(currentYear) }
+            val chosenMonth = remember { mutableStateOf(currentMonth) }
+            val chosenDay = remember { mutableStateOf(currentDay) }
+
+            DateSelectionSection(
+                onYearChosen = { chosenYear.value = it.toInt() },
+                onMonthChosen = { chosenMonth.value = monthsNames.indexOf(it) },
+                onDayChosen = { chosenDay.value = it.toInt() },
+            )
 
             Spacer(modifier = Modifier.height(30.dp))
 
+            val context = LocalContext.current
             Button(
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp),
-                onClick = { onDismissRequest() }
+                onClick = {
+                    Toast.makeText(context, "${chosenDay.value}-${chosenMonth.value}-${chosenYear.value}", Toast.LENGTH_SHORT).show()
+                    onDismissRequest()
+                }
             ) {
                 Text(
                     text = "Done",
@@ -118,13 +132,10 @@ fun DatePickerUI(
 
 @Composable
 fun DateSelectionSection(
-    onYearChosen
+    onYearChosen: (String) -> Unit,
+    onMonthChosen: (String) -> Unit,
+    onDayChosen: (String) -> Unit,
 ) {
-    val chosenYear = remember { mutableStateOf(currentYear) }
-    val chosenMonth = remember { mutableStateOf(currentMonth) }
-    val chosenDay = remember { mutableStateOf(currentDay) }
-
-
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
@@ -134,19 +145,19 @@ fun DateSelectionSection(
         InfiniteItemsPicker(
             items = days,
             firstIndex = Int.MAX_VALUE / 2 + (currentDay - 2),
-            onItemSelected = { chosenDay.value = it.toInt() }
+            onItemSelected =  onDayChosen
         )
 
         InfiniteItemsPicker(
             items = monthsNames,
             firstIndex = Int.MAX_VALUE / 2 - 4 + currentMonth,
-            onItemSelected = { chosenMonth.value = monthsNames.indexOf(it) }
+            onItemSelected =  onMonthChosen
         )
 
         InfiniteItemsPicker(
             items = years,
             firstIndex = Int.MAX_VALUE / 2 + (currentYear - 1967),
-            onItemSelected = { chosenYear.value = it.toInt() }
+            onItemSelected = onYearChosen
         )
     }
 }
